@@ -4,14 +4,25 @@
 @author: tanglei
 @contact: tanglei_0315@163.com
 @file: index.py
-@time: 2018/3/21 17:32
+@time: 18-4-25 下午3:21
 '''
+import os
 import httplib
 import urllib
 import time
 import json
+import logging
+from package.sum import linux_sum
+from package.common import common
+
+#全局变量
+#new_data_path = os.path.abspath(os.path.dirname(os.getcwd()) + os.path.sep + ".." + os.path.sep + "data" + os.path.sep + "new")
+#old_data_path = os.path.abspath(os.path.dirname(os.getcwd()) + os.path.sep + ".." + os.path.sep + "data" + os.path.sep + "old")
+new_data_path = os.path.abspath(os.getcwd() + os.path.sep + "data" + os.path.sep + "new")
+old_data_path = os.path.abspath(os.getcwd() + os.path.sep + "data" + os.path.sep + "old")
 
 def RequestUrl(host,port,source,params,timeout):
+
     headers = {"Content-type":"application/x-www-form-urlencoded"}
 
     try:
@@ -21,20 +32,39 @@ def RequestUrl(host,port,source,params,timeout):
         original = response.read()
         print original
     except Exception,e:
-        raise e
-    return original
+        print e
+
+linux_sum.data_sum()
+linux_sum.file_compare()
+'''
+for item in common.hostname(new_data_path):
+    file_path = os.path.join(new_data_path,item)
+    f = open(file_path,'r')
+    server_info = f.readline()
+    print server_info
+'''
+'''
+cpu = cpuinf
 
 server_info = {
-    'a':'aa'
+   'cpu':cpu
 }
 
+logger = logging.getLogger('test')
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s' )
+filehandler = logging.handlers.T
+'''
+
 if __name__ == '__main__':
-    #times = 0
-    #while True:
-        #RequestData = {'data':server_info}
-        #RequestData = json.dumps(RequestData)
-        RequestData = urllib.urlencode({'data':server_info})
-        result = RequestUrl('127.0.0.1','9000','/receive_server_info/',RequestData,30)
-        print '======第%d次请求，结果为: %s========= %(times,result)'
-        #times += 1
-        #time.sleep(3)
+    try:
+        for item in common.hostname(new_data_path):
+            file_path = os.path.join(new_data_path,item)
+            f = open(file_path,'r')
+            server_info = f.readline()
+            print server_info
+            #RequestData = {'data':server_info}
+            RequestData = urllib.urlencode({'data':json.dumps(server_info)})
+            result = RequestUrl('10.160.92.61','9000','/api/receive_server_info/',RequestData,30)
+    except Exception,e:
+        print e
