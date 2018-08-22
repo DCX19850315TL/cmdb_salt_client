@@ -12,6 +12,7 @@ import urllib
 import time
 import json
 import logging
+import ast
 from package.sum import linux_sum
 from package.common import common
 
@@ -62,9 +63,10 @@ if __name__ == '__main__':
             file_path = os.path.join(new_data_path,item)
             f = open(file_path,'r')
             server_info = f.readline()
+            server_info_dict = ast.literal_eval(server_info)
             print server_info
             #RequestData = {'data':server_info}
-            RequestData = urllib.urlencode({'data':json.dumps(server_info)})
+            RequestData = urllib.urlencode({'data':json.dumps(server_info_dict)})
             result = RequestUrl('10.160.92.61','9000','/api/receive_server_info/',RequestData,30)
     except Exception,e:
         print e
