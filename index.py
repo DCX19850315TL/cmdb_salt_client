@@ -63,6 +63,7 @@ if __name__ == '__main__':
             file_path = os.path.join(new_data_path,item)
             f = open(file_path,'r')
             server_info = f.readline()
+            #将字符串转变为字典
             server_info_dict = ast.literal_eval(server_info)
             print server_info
             #RequestData = {'data':server_info}
